@@ -26,11 +26,11 @@ These steps will allow you to deploy Vault (in dev mode) and Consul into your K8
   
 3. Run the following commands below to configure Vault to store the gossip key. You can put these commands into a script if you prefer.
 
-'''
+```
 export VAULT_TOKEN=root
 
 vault auth enable kubernetes
-'''
+
 vault write auth/kubernetes/config \
     token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
     kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
@@ -101,7 +101,7 @@ vault write auth/kubernetes/role/consul-ca \
     policies=consul-ca-policy \
     ttl=1h
 
-
+```
         
 4. Optional. You can view the Vault UI to confirm the Vayult PKI engine appears. You can run 'kubectl get services' to get the address of the Vault UI.
    Log into UI using browser: http://<vualt-ui-service-IP-address>:8200
