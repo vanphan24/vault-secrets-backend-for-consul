@@ -1,1 +1,69 @@
 
+This will allow you to deploy Vault and Consul into your K8s environment using helm and the provided yaml files. Consul encrypts inter-communication between agents 
+using a gossip encryption key. This feature allows you to store the gossip encryption key in Vault instead of as a K8s secret. 
+
+Note: A sample encryption key is provided in the commands below in step 3 (35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk=) 
+but you can download Consul locally to your machine and use 'consul keygen' to generate another key.
+
+Pre-reqs :
+
+- Clone this repo to your environment.
+    git clone https://github.com/vanphan24/vault-secrets-backend-for-consul.git
+
+- A k8s environment. This was tested using Azure AKS but should also work in other Kubernetes platforms like EKS.
+
+Instructions:
+
+1. Deploy Vault with the yaml file. This vault values file will set up a stand alone Vault pod in dev mode.
+
+  helm install vault hashicorp/vault -f vault-val.yaml 
+  
+2. Once deployed, log into the Vault container and run the below commands to configure your Vault instance.
+
+  kubectl exec -it vault-0 -- sh
+  
+3. Run the following commands below to configure Vault to store the gossip key. You can put these commands into a script if you prefer.
+
+        export VAULT_TOKEN=root
+
+        vault kv put secret/consul/gossip key='35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk='
+
+        vault policy write gossip-policy - <<EOF
+        path "secret/data/consul/gossip" {
+          capabilities = ["read"]
+        }
+        EOF
+
+        vault auth enable kubernetes
+
+        vault write auth/kubernetes/config \
+            token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+            kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
+            kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+        vault secrets enable -path=consul kv-v2
+
+        vault secrets enable pki
+
+        vault write auth/kubernetes/role/consul-server \
+            bound_service_account_names=consul-consul-server \
+            bound_service_account_namespaces=default \
+            policies=gossip-policy \
+            ttl=1h
+
+        vault write auth/kubernetes/role/consul-client \
+            bound_service_account_names=consul-consul-client \
+            bound_service_account_namespaces=default \
+            policies=gossip-policy \
+            ttl=1h
+
+4. Optional. You can view the Vault UI to confirm the encryption key appears. You can run kubectl get services to get the address of the Vault UI.
+   Log into UI using browser: http://<vualt-ui-service-IP-address>:8200
+   Token is "root" if you used the provided vault-val yaml
+   
+   
+5. Deploy Consul using the provided consul-val.yaml file. Consul will deploy and retreive gossip key from Vault.
+
+© 2022 GitHub, Inc.
+Terms
+Privacy
