@@ -30,7 +30,7 @@ helm install vault hashicorp/vault -f vault-val.yaml
 kubectl exec -it vault-0 -- sh
 ```  
 
-3. Run the following commands below to configure Vault to store the gossip key. You can put these commands into a script if you prefer.
+3. From inside the Vault server pod, run the following commands below to configure Vault. You can put these commands into a script if you prefer.
 
 ```
 export VAULT_TOKEN=root
