@@ -1,0 +1,13 @@
+global:
+  enabled: true
+server:
+  replicas: 1
+  bootstrapExpect: 1
+  dev:
+    enabled: true
+    devRootTooken: root
+injector:
+  enabled: true
+ui:
+  enabled: true
+  serviceType: LoadBalancer
