@@ -13,7 +13,7 @@ These steps will allow you to deploy Vault (in dev mode) and Consul into your K8
 
 - A k8s environment. This was tested using Azure AKS but should also work in other Kubernetes platforms like EKS.
 
-Instructions:
+**Instructions:**
 
 1. After you clone the repo, navigate to the vault-secrets-backend-for-consul/server-tls folder.
    Deploy Vault with the yaml file. This vault values file will set up a stand alone Vault pod in dev mode.
@@ -26,10 +26,11 @@ Instructions:
   
 3. Run the following commands below to configure Vault to store the gossip key. You can put these commands into a script if you prefer.
 
+'''
 export VAULT_TOKEN=root
 
 vault auth enable kubernetes
-
+'''
 vault write auth/kubernetes/config \
     token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
     kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
