@@ -1,0 +1,18 @@
+global:
+  secretsBackend:
+    vault:
+      enabled: true
+      consulServerRole: consul-server
+      consulClientRole: consul-client
+  gossipEncryption:
+    secretName: secret/data/consul/gossip
+    secretKey: key
+ui:
+  enabled: true
+  service:
+    enabled: true 
+    type: LoadBalancer
+
+#connectInject:
+#  enabled: true
+
