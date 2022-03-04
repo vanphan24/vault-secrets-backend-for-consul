@@ -1,8 +1,12 @@
-This will allow you to deploy Vault and Consul into your K8s environment using helm and the provided yaml files. Consul encrypts inter-communication between agents 
-using a gossip encryption key. This feature allows you to store the gossip encryption key in Vault instead of as a K8s secret. 
 
-Note: A sample encryption key is provided in the commands below in step 3 (35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk=) 
-but you can download Consul locally to your machine and use 'consul keygen' to generate another key.
+This setup is showing an example of Vault storing the gossip encryprion key, rather than storing it onto Kubernetes secrets. 
+Vault is much more secure than K8s secrets.
+When Consul boots up in K8s, it will retrieve the gossip key from Vault.
+
+These steps will allow you to deploy Vault and Consul into your K8s environment using helm and the provided yaml files without any other dependencies.
+
+Note: A sample encryption key (35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk=) is provided in the commands below in step 3. 
+but you can download Consul locally to your machine and use 'consul keygen' to generate another key if you wish.
 
 Pre-reqs :
 
@@ -13,7 +17,8 @@ Pre-reqs :
 
 Instructions:
 
-1. Deploy Vault with the yaml file. This vault values file will set up a stand alone Vault pod in dev mode.
+1. After you clone the repo, navigate to the vault-secrets-backend-for-consul/gossip-key folder.
+   Deploy Vault with the yaml file. This vault values file will set up a stand alone Vault pod in dev mode.
 
   helm install vault hashicorp/vault -f vault-val.yaml 
   
