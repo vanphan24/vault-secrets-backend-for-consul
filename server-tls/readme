@@ -6,7 +6,7 @@ When Consul boots up in K8s, it will retrieve the Server certs from Vault.
 
 These steps will allow you to deploy Vault (in dev mode) and Consul into your K8s environment using helm and the provided yaml files without any other dependencies.
 
-Pre-reqs :
+**Pre-reqs :**
 
 - Clone this repo to your environment.
     git clone https://github.com/vanphan24/vault-secrets-backend-for-consul.git
