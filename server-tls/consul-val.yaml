@@ -1,0 +1,20 @@
+global:
+  secretsBackend:
+    vault:
+      enabled: true
+      consulServerRole: consul-server
+      consulClientRole: consul-client
+      consulCARole: consul-ca
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    caCert:
+      secretName: "pki/cert/ca"
+server:
+  replicas: 2
+  serverCert:
+    secretName: "pki/issue/consul-server"
+#  extraVolumes:
+#  - type: "secret"
+#    name: vault-ca
+#    load: "false"
