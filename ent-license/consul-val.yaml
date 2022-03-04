@@ -1,0 +1,25 @@
+global:
+  image: hashicorp/consul-enterprise:1.11.4-ent
+  secretsBackend:
+    vault:
+      enabled: true
+      consulServerRole: consul-server
+      consulClientRole: consul-client
+  gossipEncryption:
+    secretName: secret/data/consul/gossip
+    secretKey: key
+  
+  enterpriseLicense:
+    secretName: secret/data/consul/enterpriselicense
+    secretKey: key
+  
+
+ui:
+  enabled: true
+  service:
+    enabled: true 
+    type: LoadBalancer
+
+#connectInject:
+#  enabled: true
+
