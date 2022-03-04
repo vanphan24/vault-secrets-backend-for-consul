@@ -9,7 +9,9 @@ These steps will allow you to deploy Vault (in dev mode) and Consul into your K8
 **Pre-reqs :**
 
 - Clone this repo to your environment.
-    git clone https://github.com/vanphan24/vault-secrets-backend-for-consul.git
+```
+git clone https://github.com/vanphan24/vault-secrets-backend-for-consul.git
+```
 
 - A k8s environment. This was tested using Azure AKS but should also work in other Kubernetes platforms like EKS.
 
@@ -17,13 +19,15 @@ These steps will allow you to deploy Vault (in dev mode) and Consul into your K8
 
 1. After you clone the repo, navigate to the vault-secrets-backend-for-consul/server-tls folder.
    Deploy Vault with the yaml file. This vault values file will set up a stand alone Vault pod in dev mode.
-
+```
   helm install vault hashicorp/vault -f vault-val.yaml 
-  
-2. Once deployed, log into the Vault server pod and run the below commands to configure your Vault instance.
+```  
 
+2. Once deployed, log into the Vault server pod and run the below commands to configure your Vault instance.
+```
   kubectl exec -it vault-0 -- sh
-  
+```  
+
 3. Run the following commands below to configure Vault to store the gossip key. You can put these commands into a script if you prefer.
 
 ```
@@ -103,17 +107,19 @@ vault write auth/kubernetes/role/consul-ca \
 
 ```
         
-4. Optional. You can view the Vault UI to confirm the Vayult PKI engine appears. You can run 'kubectl get services' to get the address of the Vault UI.
+4. Optional. You can view the Vault UI to confirm the Vayult PKI engine appears. You can run ```kubectl get services``` to get the address of the Vault UI.
    Log into UI using browser: http://<vualt-ui-service-IP-address>:8200
    Token is "root" if you used the provided vault-val yaml
    
    
 5. Deploy Consul using the provided consul-val.yaml file. Consul will deploy and retreive Server certs files from Vault. 
    You can log onto one of the Consul server pods and navigate to the /vault/secrets folder to confirm the 3 files appear.
-   
+```   
    helm install consul hashicorp/consul -f consul-val.yaml --wait --debug
-
-    server-tls % kubectl get pods
+```
+You should see the following pods:
+```    
+    kubectl get pods
     NAME                                  READY   STATUS    RESTARTS   AGE
     consul-consul-client-9kpsz            2/2     Running   0          57s
     consul-consul-client-qq84x            2/2     Running   0          57s
@@ -121,17 +127,18 @@ vault write auth/kubernetes/role/consul-ca \
     consul-consul-server-0                2/2     Running   0          57s
     vault-0                               1/1     Running   0          2m40s
     vault-agent-injector-58b6d499-t2qbv   1/1     Running   0          2m40s
-    
+```    
     
 6. Confirm the server certificates are in in the Consul server. Log into the Consul server pod.
-    
+```    
     kubectl exec -it consul-consul-server-0 -- sh
-
+```
+    
 7. Inside the Consul server pod, check that 3 cert files exist in the vault/secret directory.
-
+```
     ls vault/secrets/
     serverca.crt    servercert.crt  servercert.key
-
+```
 
 
 © 2022 GitHub, Inc.
