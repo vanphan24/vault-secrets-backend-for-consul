@@ -5,8 +5,10 @@ When Consul boots up in K8s, it will retrieve the gossip key and Ent license fro
 
 These steps will allow you to deploy Vault and Consul into your K8s environment using helm and the provided yaml files. 
 
-Note: A sample encryption key (35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk=) and Ent license is provided in the commands below in step 3. 
+Note: A sample encryption key (35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk=) is provided in the commands below in step 3. 
 but you can download Consul locally to your machine and use 'consul keygen' to generate another key.
+Also, and Ent license in step 3 is provided but you should get your own if to ensure its not expired.
+
 
 Pre-reqs :
 
