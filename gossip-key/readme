@@ -1,4 +1,17 @@
-This will allow you to deploy Vault and Consul into your K8s environment using helm and the provided yaml files.
+This will allow you to deploy Vault and Consul into your K8s environment using helm and the provided yaml files. Consul encrypts inter-communication between agents 
+using a gossip encryption key. This feature allows you to store the gossip encryption key in Vault instead of as a K8s secret. 
+
+Note: A sample encryption key is provided in the commands below in step 3 (35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk=) 
+but you can download Consul locally to your machine and use 'consul keygen' to generate another key.
+
+Pre-reqs :
+
+- Clone this repo to your environment.
+    git clone https://github.com/vanphan24/vault-secrets-backend-for-consul.git
+
+- A k8s environment. This was tested using Azure AKS but should also work in other Kubernetes platforms like EKS.
+
+Instructions:
 
 1. Deploy Vault with the yaml file. This vault values file will set up a stand alone Vault pod in dev mode.
 
@@ -8,7 +21,7 @@ This will allow you to deploy Vault and Consul into your K8s environment using h
 
   kubectl exec -it vault-0 -- sh
   
-3. Run the following commands below to configure Vault. You can put these commands into a script if you prefer.
+3. Run the following commands below to configure Vault to store the gossip key. You can put these commands into a script if you prefer.
 
         export VAULT_TOKEN=root
 
@@ -46,7 +59,6 @@ This will allow you to deploy Vault and Consul into your K8s environment using h
 4. Optional. You can view the Vault UI to confirm the encryption key appears. You can run kubectl get services to get the address of the Vault UI.
    Log into UI using browser: http://<vualt-ui-service-IP-address>:8200
    Token is "root" if you used the provided vault-val yaml
-   
    
    
 5. Deploy Consul using the provided consul-val.yaml file. Consul will deploy and retreive gossip key from Vault.
