@@ -22,7 +22,7 @@ Pre-reqs :
 
 Instructions:
 
-1. Navigate to the vault-secrets-backend-for-consul/ent-license folder. 
+1. After you clone the repo, navigate to the vault-secrets-backend-for-consul/ent-license folder. 
    Deploy Vault with the yaml file. This vault values file will set up a stand alone Vault pod in dev mode.
 
   helm install vault hashicorp/vault -f vault-val.yaml 
