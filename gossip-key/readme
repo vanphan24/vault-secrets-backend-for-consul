@@ -28,38 +28,38 @@ Instructions:
   
 3. Run the following commands below to configure Vault to store the gossip key. You can put these commands into a script if you prefer.
 
-        export VAULT_TOKEN=root
+export VAULT_TOKEN=root
 
-        vault kv put secret/consul/gossip key='35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk='
+vault kv put secret/consul/gossip key='35FAhIVytwznTTk1bGuLs0nTpxQHUiGnWmxJ7ggcUKk='
 
-        vault policy write gossip-policy - <<EOF
-        path "secret/data/consul/gossip" {
-          capabilities = ["read"]
-        }
-        EOF
+vault policy write gossip-policy - <<EOF
+path "secret/data/consul/gossip" {
+  capabilities = ["read"]
+  }
+EOF
 
-        vault auth enable kubernetes
+vault auth enable kubernetes
 
-        vault write auth/kubernetes/config \
-            token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
-            kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
-            kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+vault write auth/kubernetes/config \
+    token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+    kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
+    kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 
-        vault secrets enable -path=consul kv-v2
+vault secrets enable -path=consul kv-v2
 
-        vault secrets enable pki
+vault secrets enable pki
 
-        vault write auth/kubernetes/role/consul-server \
-            bound_service_account_names=consul-consul-server \
-            bound_service_account_namespaces=default \
-            policies=gossip-policy \
-            ttl=1h
+vault write auth/kubernetes/role/consul-server \
+    bound_service_account_names=consul-consul-server \
+    bound_service_account_namespaces=default \
+    policies=gossip-policy \
+    ttl=1h
 
-        vault write auth/kubernetes/role/consul-client \
-            bound_service_account_names=consul-consul-client \
-            bound_service_account_namespaces=default \
-            policies=gossip-policy \
-            ttl=1h
+vault write auth/kubernetes/role/consul-client \
+    bound_service_account_names=consul-consul-client \
+    bound_service_account_namespaces=default \
+    policies=gossip-policy \
+    ttl=1h
 
 4. Optional. You can view the Vault UI to confirm the encryption key appears. You can run kubectl get services to get the address of the Vault UI.
    Log into UI using browser: http://<vualt-ui-service-IP-address>:8200
